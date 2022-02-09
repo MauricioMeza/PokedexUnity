@@ -13,11 +13,15 @@ public class ScreenLoad : MonoBehaviour
     public GameObject ui_weight;
     public GameObject ui_type1;
     public GameObject ui_type2;
+    public GameObject ui_searchBar;
+    public GameObject ui_searchButton;
     public GameObject[] ui_stats;
 
     Image img;
     Image img_type1;
     Image img_type2;
+    TMP_InputField searchBar;
+    Button searchButton;
     TextMeshProUGUI text_type1;
     TextMeshProUGUI text_type2;
     TextMeshProUGUI text_name;
@@ -38,6 +42,8 @@ public class ScreenLoad : MonoBehaviour
         text_name = ui_name.GetComponent<TextMeshProUGUI>();
         text_height = ui_height.GetComponent<TextMeshProUGUI>();
         text_weight = ui_weight.GetComponent<TextMeshProUGUI>();
+        searchBar = ui_searchBar.GetComponent<TMP_InputField>();
+        searchButton = ui_searchButton.GetComponent<Button>();
         img_type1 = ui_type1.GetComponent<Image>();
         img_type2 = ui_type2.GetComponent<Image>();
         text_type1 = ui_type1.transform.Find("UI_TextType").GetComponent<TextMeshProUGUI>();
@@ -57,19 +63,17 @@ public class ScreenLoad : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Change of Pokemons working with keyboard arrows
         if(Input.GetKeyDown(KeyCode.RightArrow)){
-            
-            if(currentPoke != (pokemones.Count-1))
-                currentPoke++;
-            else
-                currentPoke = 0;
-
-            loadPokeToScreen(currentPoke);
+            pokeRight();
+        }  
+        if(Input.GetKeyDown(KeyCode.LeftArrow)){
+            pokeLeft();            
         }  
     }
 
 
-    //GET HTTP Request to API
+    //GET HTTP Request to API for Pokemon
     IEnumerator GetPokemon(string pokeId)
     {
         Pokemon poke;
@@ -85,12 +89,31 @@ public class ScreenLoad : MonoBehaviour
         {
             //Extract JSON Data from response  
             poke = JsonUtility.FromJson<Pokemon>(www.downloadHandler.text);
-            pokemones.Add(poke);
-            StartCoroutine(GetPokeSprite(poke));
+            bool alreadyInList = false;
+            int i=0;
+
+            //Check if Pokemon is already scanned, else add it to pokedex
+            foreach(Pokemon pk in pokemones)
+            {
+                if(pk.id == poke.id){
+                    alreadyInList = true;
+                    break;
+                }
+                i++;
+            }
+            if(alreadyInList){
+                currentPoke = i;
+                loadPokeToScreen(currentPoke);
+            }else
+            {
+                pokemones.Add(poke);
+                StartCoroutine(GetPokeSprite(poke));
+            }
+            
         }
     } 
 
-
+    //GET HTTP Request to API for Sprite PNG
     IEnumerator GetPokeSprite(Pokemon poke)
     {
         string spriteURL = poke.sprites.front_default;
@@ -109,12 +132,13 @@ public class ScreenLoad : MonoBehaviour
             new Rect(0,0, texture.width, texture.height),      
             Vector2.one/2);
             poke.sprite = sprite;
+            currentPoke = pokemones.Count - 1;
             loadPokeToScreen(currentPoke);
         }
     } 
 
-
-    public void loadPokeToScreen(int num){
+    //Loads into the screen the info of a given pokemon
+    private void loadPokeToScreen(int num){
         Pokemon currentPoke = pokemones[num];
         
         //Format Text
@@ -166,9 +190,31 @@ public class ScreenLoad : MonoBehaviour
         }
     }
 
+    //Sends request for pokemon in SearchBar
+    private void searchPokemon()
+    {
+        string pokeString = searchBar.text;
+        StartCoroutine(GetPokemon(pokeString)); 
+    }
 
+    //Capitalizes first letter in a string
     private string CapitalizeFirst(string str){
         str = char.ToUpper(str[0]) + str.Substring(1);
         return str;
+    }
+
+    public void pokeRight(){
+        if(currentPoke != (pokemones.Count-1))
+                currentPoke++;
+            else
+                currentPoke = 0;
+            loadPokeToScreen(currentPoke);      
+    }
+    public void pokeLeft(){
+        if(currentPoke != 0)
+                currentPoke--;
+            else
+                currentPoke = pokemones.Count-1;
+            loadPokeToScreen(currentPoke);
     }
 }
