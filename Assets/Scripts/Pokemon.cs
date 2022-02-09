@@ -19,6 +19,11 @@ public class PokemonStat
     public int base_stat;
 }
 
+[Serializable]
+public class PokemonSprite
+{
+    public string front_default;
+}
 
 [Serializable]
 public class PokemonType

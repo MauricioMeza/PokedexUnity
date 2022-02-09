@@ -80,6 +80,28 @@ public class ScreenLoad : MonoBehaviour
     } 
 
 
+    IEnumerator GetPokeSprite(string spriteURL)
+    {
+
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(spriteURL);
+        yield return www.SendWebRequest();
+
+        if ( www.result != UnityWebRequest.Result.Success) 
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            //Extract JSON Data from response  
+            Texture texture = DownloadHandlerTexture.GetContent(www);
+            Sprite sprite = Sprite.Create((Texture2D)texture, 
+            new Rect(0,0, texture.width, texture.height),      
+            Vector2.one/2);
+            img.sprite = sprite;
+        }
+    } 
+
+
     public void loadPokeToScreen(int num){
         Pokemon currentPoke = pokemones[num];
         
@@ -118,6 +140,7 @@ public class ScreenLoad : MonoBehaviour
             
         }
 
+        StartCoroutine(GetPokeSprite(currentPoke.sprites.front_default));
 
         //Set Text, change value and change color on stats
         int i = 0;
