@@ -8,12 +8,12 @@ public class Pokemon
     public string name;
     public int height;
     public int weight; 
-
+    public PokemonStat[] stats;
 
 }
 
 [Serializable]
-public class PokedexDB
+public class PokemonStat
 {
-    private List<Pokemon> pokemons;
+    public int base_stat;
 }
