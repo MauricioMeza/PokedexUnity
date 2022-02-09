@@ -9,6 +9,7 @@ public class Pokemon
     public int height;
     public int weight; 
     public PokemonStat[] stats;
+    public PokemonType[] types;
 
 }
 
@@ -16,4 +17,16 @@ public class Pokemon
 public class PokemonStat
 {
     public int base_stat;
+}
+
+
+[Serializable]
+public class PokemonType
+{
+    public Type type;
+}
+[Serializable]
+public class Type
+{
+    public string name;
 }
