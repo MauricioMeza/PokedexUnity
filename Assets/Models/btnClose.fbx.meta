@@ -1,77 +1,11 @@
 fileFormatVersion: 2
-guid: 3a18737f8fc1ec84191a3540a842afaf
+guid: 5e1faf597807868468b65d21885f083f
 ModelImporter:
   serializedVersion: 20200
-  internalIDToNameTable:
-  - first:
-      74: 6392406347272358821
-    second: Armature|Close1
-  - first:
-      74: -3977922379544558917
-    second: Armature|Turn1
-  - first:
-      74: -1747080226151442337
-    second: Armature|Closed
-  - first:
-      74: 3353641223363340806
-    second: Armature|Opened
-  - first:
-      74: 1695886824858363213
-    second: Armature|Open1
-  - first:
-      74: -7825946471812756216
-    second: Armature|Turn2
-  - first:
-      74: 8890609025085282811
-    second: Armature|Turned
-  - first:
-      74: -3198506434983000229
-    second: Armature|Close1.001
-  - first:
-      74: 4298933457035212318
-    second: Armature|SantanderAction
-  - first:
-      74: -3607117002697000860
-    second: Armature|Closed.001
-  - first:
-      74: -8271092870328169053
-    second: Armature|Turn1.001
-  - first:
-      74: -8753173559165340830
-    second: Armature|Turn1.002
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.001
-    second: {fileID: 2100000, guid: fa29944bddb433c45a2819f8cddcef9f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.002
-    second: {fileID: 2100000, guid: c613d6b7e687fa14f9b0a1a875dc772f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.003
-    second: {fileID: 2100000, guid: e93f71158f983044495328c7c7c8c544, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.004
-    second: {fileID: 2100000, guid: 9678187f5d3c8ab45807e8277404b5e9, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.005
-    second: {fileID: 2100000, guid: 3bd28c802a278a94ba560201e13a6b30, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: No Name
-    second: {fileID: 2100000, guid: 41374624b0935884b821675105262248, type: 2}
+  internalIDToNameTable: []
+  externalObjects: {}
   materials:
-    materialImportMode: 1
+    materialImportMode: 2
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -161,7 +95,7 @@ ModelImporter:
   animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
-  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

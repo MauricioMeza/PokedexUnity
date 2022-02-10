@@ -127,7 +127,7 @@ public class ScreenLoad : MonoBehaviour
         if(currentPoke.types.Length == 1){
             RectTransform rect;
             rect = ui_type1.GetComponent<RectTransform>();
-            rect.localPosition = new Vector3(0,3,0);
+            rect.localPosition = new Vector3(0,rect.localPosition.y,0);
             ui_type2.SetActive(false);
             string type = currentPoke.types[0].type.name;
             text_type1.text = CapitalizeFirst(type);
@@ -135,7 +135,7 @@ public class ScreenLoad : MonoBehaviour
         }else{
             RectTransform rect;
             rect = ui_type1.GetComponent<RectTransform>();
-            rect.localPosition = new Vector3(-48,3,0);
+            rect.localPosition = new Vector3(-48,rect.localPosition.y,0);
             ui_type1.GetComponent<RectTransform>();
             ui_type2.SetActive(true);
             string type1 = currentPoke.types[0].type.name;
