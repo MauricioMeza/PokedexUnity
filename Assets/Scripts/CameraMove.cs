@@ -4,15 +4,27 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour
 {
-    public enum RotationAxes { MouseY = 2 }
-    public RotationAxes axes = RotationAxes.MouseY;
-
+    public GameObject pokedex;
+    enum RotationAxes { MouseY = 2 }
+    RotationAxes axes = RotationAxes.MouseY;
     float rotationY;
     Quaternion originalRotation;
+    Animator poke_anim;
+
     // Start is called before the first frame update
     void Start()
     {
         originalRotation = transform.localRotation;
+        
+        //Check aspect ratio for starting animation
+        poke_anim = pokedex.GetComponent<Animator>();
+        float aspect = Camera.main.aspect;
+        if(aspect >= 1.0){
+            poke_anim.SetBool("open", true);
+        }else
+        {
+            poke_anim.SetBool("open", false);
+        }
     }
 
     // Update is called once per frame

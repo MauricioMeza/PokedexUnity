@@ -4077,7 +4077,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c524abc1719f9674f8ed0ca33318b4c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axes: 2
+  pokedex: {fileID: 3383293814108717099}
 --- !u!1 &968115175
 GameObject:
   m_ObjectHideFlags: 0
@@ -9449,7 +9449,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3bd28c802a278a94ba560201e13a6b30, type: 2}
+  - {fileID: 2100000, guid: 41374624b0935884b821675105262248, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9518,7 +9518,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3bd28c802a278a94ba560201e13a6b30, type: 2}
+  - {fileID: 2100000, guid: 41374624b0935884b821675105262248, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10184,7 +10184,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: c613d6b7e687fa14f9b0a1a875dc772f, type: 2}
-  - {fileID: 2100000, guid: e93f71158f983044495328c7c7c8c544, type: 2}
+  - {fileID: 2100000, guid: 3bd28c802a278a94ba560201e13a6b30, type: 2}
   - {fileID: 2100000, guid: 9678187f5d3c8ab45807e8277404b5e9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

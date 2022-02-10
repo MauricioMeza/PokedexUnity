@@ -33,12 +33,12 @@ public class PokedexAnim : MonoBehaviour
     //Animation for opening or closing pokedex
     public void open(){
         bool open = animator.GetBool("open");
-        if(open)
+        if(open && !animator.GetBool("turn"))
         {
             animator.SetBool("open", false);
             mesh_3d.enabled = false;
         }
-        else if(!open)
+        else if(!open && !animator.GetBool("turn"))
         {
             animator.SetBool("open", true);
             mesh_3d.enabled = true;  
@@ -48,9 +48,9 @@ public class PokedexAnim : MonoBehaviour
     //Animation for turning pokedex when its closed
     public void turn(){
         bool turn = animator.GetBool("turn");
-        if(turn)
+        if(turn && !animator.GetBool("open"))
             animator.SetBool("turn", false);
-        else if(!turn)
+        else if(!turn && !animator.GetBool("open"))
             animator.SetBool("turn", true);
     }
 }
