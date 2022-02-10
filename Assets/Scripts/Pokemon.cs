@@ -12,6 +12,7 @@ public class Pokemon
     public PokemonStat[] stats;
     public PokemonType[] types;
     public PokemonSprite sprites;
+    public PokemonAbility[] abilities;
     [NonSerialized]
     public Sprite sprite;
 
@@ -89,8 +90,8 @@ public class Pokemon
         }
         return color;
     }
-
 }
+
 
 [Serializable]
 public class PokemonStat
@@ -109,8 +110,20 @@ public class PokemonType
 {
     public Type type;
 }
+
 [Serializable]
 public class Type
+{
+    public string name;
+}
+
+[Serializable]
+public class PokemonAbility
+{
+    public Ability ability;
+}
+[Serializable]
+public class Ability
 {
     public string name;
 }

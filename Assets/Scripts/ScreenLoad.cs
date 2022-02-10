@@ -7,23 +7,31 @@ using TMPro;
 
 public class ScreenLoad : MonoBehaviour
 {
+    public GameObject ui_canRight;
+    public GameObject ui_num;
     public GameObject ui_img;
     public GameObject ui_name;
     public GameObject ui_height;
     public GameObject ui_weight;
     public GameObject ui_type1;
     public GameObject ui_type2;
+    public GameObject ui_abl1;
+    public GameObject ui_abl2;
     public GameObject ui_searchBar;
     public GameObject ui_searchButton;
     public GameObject[] ui_stats;
 
+    Canvas canvas_right;
     Image img;
     Image img_type1;
     Image img_type2;
     TMP_InputField searchBar;
     Button searchButton;
+    TextMeshProUGUI text_num;
     TextMeshProUGUI text_type1;
     TextMeshProUGUI text_type2;
+    TextMeshProUGUI text_abl1;
+    TextMeshProUGUI text_abl2;
     TextMeshProUGUI text_name;
     TextMeshProUGUI text_height;
     TextMeshProUGUI text_weight;
@@ -38,7 +46,11 @@ public class ScreenLoad : MonoBehaviour
         pokemones = new List<Pokemon>();
 
         //Get all UI elements Text Component
+        canvas_right = ui_canRight.GetComponent<Canvas>();
+        canvas_right.enabled = false;
         img = ui_img.GetComponent<Image>();
+        img.enabled = false;
+        text_num = ui_num.GetComponent<TextMeshProUGUI>();
         text_name = ui_name.GetComponent<TextMeshProUGUI>();
         text_height = ui_height.GetComponent<TextMeshProUGUI>();
         text_weight = ui_weight.GetComponent<TextMeshProUGUI>();
@@ -46,6 +58,8 @@ public class ScreenLoad : MonoBehaviour
         searchButton = ui_searchButton.GetComponent<Button>();
         img_type1 = ui_type1.GetComponent<Image>();
         img_type2 = ui_type2.GetComponent<Image>();
+        text_abl1 = ui_abl1.GetComponent<TextMeshProUGUI>();
+        text_abl2 = ui_abl2.GetComponent<TextMeshProUGUI>();
         text_type1 = ui_type1.transform.Find("UI_TextType").GetComponent<TextMeshProUGUI>();
         text_type2 = ui_type2.transform.Find("UI_TextType").GetComponent<TextMeshProUGUI>();
         slider_stats = new List<Slider>();
@@ -54,10 +68,10 @@ public class ScreenLoad : MonoBehaviour
             slider_stats.Add(ui_s.GetComponent<Slider>());
         }
 
+        //Load 3 Initial Pokemons
         StartCoroutine(GetPokemon("charizard"));
         StartCoroutine(GetPokemon("pikachu"));
         StartCoroutine(GetPokemon("chikorita"));
-        
     }
 
     // Update is called once per frame
@@ -107,7 +121,9 @@ public class ScreenLoad : MonoBehaviour
             }else
             {
                 pokemones.Add(poke);
+                text_num.text = pokemones.Count.ToString() + "/889";
                 StartCoroutine(GetPokeSprite(poke));
+                canvas_right.enabled = true;
             }
             
         }
@@ -148,15 +164,21 @@ public class ScreenLoad : MonoBehaviour
 
         //Set Img andText in name, weight, height
         img.sprite = currentPoke.sprite;
+        img.enabled = true;
         text_name.text = CapitalizeFirst(currentPoke.name) + " #" + currentPoke.id;
         text_height.text = h.ToString() + " m";
         text_weight.text = w.ToString() + " kg";
+        text_abl1.text = CapitalizeFirst(currentPoke.abilities[0].ability.name);
+        if(currentPoke.abilities.Length == 1)
+            text_abl2.text = "none";
+        else
+            text_abl2.text = currentPoke.abilities[1].ability.name;
 
         //Set Text and change color depending on types and how many types
         if(currentPoke.types.Length == 1){
             RectTransform rect;
             rect = ui_type1.GetComponent<RectTransform>();
-            rect.localPosition = new Vector3(0,20,0);
+            rect.localPosition = new Vector3(0,3,0);
             ui_type2.SetActive(false);
             string type = currentPoke.types[0].type.name;
             text_type1.text = CapitalizeFirst(type);
@@ -164,7 +186,7 @@ public class ScreenLoad : MonoBehaviour
         }else{
             RectTransform rect;
             rect = ui_type1.GetComponent<RectTransform>();
-            rect.localPosition = new Vector3(-48,20,0);
+            rect.localPosition = new Vector3(-48,3,0);
             ui_type1.GetComponent<RectTransform>();
             ui_type2.SetActive(true);
             string type1 = currentPoke.types[0].type.name;
@@ -194,7 +216,8 @@ public class ScreenLoad : MonoBehaviour
     private void searchPokemon()
     {
         string pokeString = searchBar.text;
-        StartCoroutine(GetPokemon(pokeString)); 
+        if(pokeString.Length != 0)
+            StartCoroutine(GetPokemon(pokeString)); 
     }
 
     //Capitalizes first letter in a string
