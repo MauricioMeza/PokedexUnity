@@ -22,6 +22,7 @@ public class ScreenLoad : MonoBehaviour
     public GameObject ui_searchBar;
     public GameObject ui_searchButton;
     public GameObject[] ui_stats;
+    public GameObject[] ui_moves;
     public Mesh[] def_3d;
 
     Canvas canvas_right;
@@ -41,6 +42,7 @@ public class ScreenLoad : MonoBehaviour
     TextMeshProUGUI text_height;
     TextMeshProUGUI text_weight;
     List<Slider> slider_stats;
+    List<TextMeshProUGUI> text_moves;
 
     List<Pokemon> pokemones;
     int currentPoke = 0;
@@ -77,6 +79,12 @@ public class ScreenLoad : MonoBehaviour
             slider_stats.Add(ui_s.GetComponent<Slider>());
         }
 
+        text_moves = new List<TextMeshProUGUI>();
+        foreach(GameObject ui_t in ui_moves)
+        {
+            text_moves.Add(ui_t.GetComponent<TextMeshProUGUI>());
+        }
+
         //Load 3 Initial Pokemons
         StartCoroutine(GetPokemon("charizard", true));
         StartCoroutine(GetPokemon("pikachu", false));
@@ -111,7 +119,7 @@ public class ScreenLoad : MonoBehaviour
         text_weight.text = w.ToString() + " kg";
         text_abl1.text = CapitalizeFirst(currentPoke.abilities[0].ability.name);
         if(currentPoke.abilities.Length == 1)
-            text_abl2.text = "none";
+            text_abl2.text = "/";
         else
             text_abl2.text = currentPoke.abilities[1].ability.name;
 
@@ -138,6 +146,32 @@ public class ScreenLoad : MonoBehaviour
             img_type2.color = Pokemon.GetColorFromType(type2);
         }
 
+        //Set Text, change value and change color on stats
+        int i = 0;
+        foreach(Slider sld in slider_stats)
+        {
+            int val = currentPoke.stats[i].base_stat;
+            sld.value = val;
+            sld.gameObject.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = Pokemon.GetColorFromStat(val);
+            sld.gameObject.transform.Find("Handle Slide Area").Find("Handle").Find("Value").GetComponent<Text>().text = val.ToString();
+            i++;
+        }
+
+        //Set Text, change value and change color on stats
+        i = 0;
+        foreach(TextMeshProUGUI txt in text_moves)
+        {
+            string mov;
+            if(i < (currentPoke.moves.Length))
+                mov = currentPoke.moves[i].move.name;
+            else
+            {
+                mov = "/";    
+            }
+            txt.text = mov;
+            i++;
+        }
+
         //Placeholder for 3D Mesh (it looks cool but im not implementing 889 3d models... for now)
         switch(currentPoke.id){
             case 6:
@@ -152,17 +186,6 @@ public class ScreenLoad : MonoBehaviour
             default:
                 mesh_3d.mesh = def_3d[3];
                 break;
-        }
-
-        //Set Text, change value and change color on stats
-        int i = 0;
-        foreach(Slider sld in slider_stats)
-        {
-            int val = currentPoke.stats[i].base_stat;
-            sld.value = val;
-            sld.gameObject.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = Pokemon.GetColorFromStat(val);
-            sld.gameObject.transform.Find("Handle Slide Area").Find("Handle").Find("Value").GetComponent<Text>().text = val.ToString();
-            i++;
         }
     }
 

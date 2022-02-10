@@ -13,6 +13,7 @@ public class Pokemon
     public PokemonType[] types;
     public PokemonSprite sprites;
     public PokemonAbility[] abilities;
+    public PokemonMove[] moves;
     [NonSerialized]
     public Sprite sprite;
 
@@ -127,6 +128,17 @@ public class PokemonAbility
 }
 [Serializable]
 public class Ability
+{
+    public string name;
+}
+
+[Serializable]
+public class PokemonMove
+{
+    public Move move;
+}
+[Serializable]
+public class Move
 {
     public string name;
 }
