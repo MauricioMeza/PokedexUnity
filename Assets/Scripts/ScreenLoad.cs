@@ -8,6 +8,8 @@ using TMPro;
 public class ScreenLoad : MonoBehaviour
 {
     public GameObject ui_canRight;
+    public GameObject ui_canLeft;
+    public GameObject ui_3d;
     public GameObject ui_num;
     public GameObject ui_img;
     public GameObject ui_name;
@@ -20,8 +22,11 @@ public class ScreenLoad : MonoBehaviour
     public GameObject ui_searchBar;
     public GameObject ui_searchButton;
     public GameObject[] ui_stats;
+    public Mesh[] def_3d;
 
     Canvas canvas_right;
+    Canvas canvas_left;
+    MeshFilter mesh_3d;
     Image img;
     Image img_type1;
     Image img_type2;
@@ -48,8 +53,11 @@ public class ScreenLoad : MonoBehaviour
         //Get all UI elements Text Component
         canvas_right = ui_canRight.GetComponent<Canvas>();
         canvas_right.enabled = false;
+        canvas_left = ui_canLeft.GetComponent<Canvas>();
+        canvas_left.enabled = false;
         img = ui_img.GetComponent<Image>();
         img.enabled = false;
+        mesh_3d = ui_3d.GetComponent<MeshFilter>();
         text_num = ui_num.GetComponent<TextMeshProUGUI>();
         text_name = ui_name.GetComponent<TextMeshProUGUI>();
         text_height = ui_height.GetComponent<TextMeshProUGUI>();
@@ -58,10 +66,11 @@ public class ScreenLoad : MonoBehaviour
         searchButton = ui_searchButton.GetComponent<Button>();
         img_type1 = ui_type1.GetComponent<Image>();
         img_type2 = ui_type2.GetComponent<Image>();
-        text_abl1 = ui_abl1.GetComponent<TextMeshProUGUI>();
-        text_abl2 = ui_abl2.GetComponent<TextMeshProUGUI>();
         text_type1 = ui_type1.transform.Find("UI_TextType").GetComponent<TextMeshProUGUI>();
         text_type2 = ui_type2.transform.Find("UI_TextType").GetComponent<TextMeshProUGUI>();
+        text_abl1 = ui_abl1.GetComponent<TextMeshProUGUI>();
+        text_abl2 = ui_abl2.GetComponent<TextMeshProUGUI>();
+        
         slider_stats = new List<Slider>();
         foreach(GameObject ui_s in ui_stats)
         {
@@ -69,9 +78,9 @@ public class ScreenLoad : MonoBehaviour
         }
 
         //Load 3 Initial Pokemons
-        StartCoroutine(GetPokemon("charizard"));
-        StartCoroutine(GetPokemon("pikachu"));
-        StartCoroutine(GetPokemon("chikorita"));
+        StartCoroutine(GetPokemon("charizard", true));
+        StartCoroutine(GetPokemon("pikachu", false));
+        StartCoroutine(GetPokemon("chikorita", false));
     }
 
     // Update is called once per frame
@@ -88,7 +97,7 @@ public class ScreenLoad : MonoBehaviour
 
 
     //GET HTTP Request to API for Pokemon
-    IEnumerator GetPokemon(string pokeId)
+    IEnumerator GetPokemon(string pokeId, bool load)
     {
         Pokemon poke;
 
@@ -122,15 +131,14 @@ public class ScreenLoad : MonoBehaviour
             {
                 pokemones.Add(poke);
                 text_num.text = pokemones.Count.ToString() + "/889";
-                StartCoroutine(GetPokeSprite(poke));
-                canvas_right.enabled = true;
+                StartCoroutine(GetPokeSprite(poke, load));
             }
             
         }
     } 
 
     //GET HTTP Request to API for Sprite PNG
-    IEnumerator GetPokeSprite(Pokemon poke)
+    IEnumerator GetPokeSprite(Pokemon poke, bool load)
     {
         string spriteURL = poke.sprites.front_default;
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(spriteURL);
@@ -148,8 +156,11 @@ public class ScreenLoad : MonoBehaviour
             new Rect(0,0, texture.width, texture.height),      
             Vector2.one/2);
             poke.sprite = sprite;
-            currentPoke = pokemones.Count - 1;
-            loadPokeToScreen(currentPoke);
+            if(load)
+                currentPoke = pokemones.Count - 1;
+                loadPokeToScreen(currentPoke);
+                canvas_right.enabled = true;
+                canvas_left.enabled = true;
         }
     } 
 
@@ -198,7 +209,20 @@ public class ScreenLoad : MonoBehaviour
             
         }
 
-        
+        switch(currentPoke.id){
+            case 6:
+                mesh_3d.mesh = def_3d[0];
+                break;
+            case 25:
+                mesh_3d.mesh = def_3d[1];
+                break;
+            case 152:
+                mesh_3d.mesh = def_3d[2];
+                break;
+            default:
+                mesh_3d.mesh = def_3d[3];
+                break;
+        }
 
         //Set Text, change value and change color on stats
         int i = 0;
@@ -217,7 +241,7 @@ public class ScreenLoad : MonoBehaviour
     {
         string pokeString = searchBar.text;
         if(pokeString.Length != 0)
-            StartCoroutine(GetPokemon(pokeString)); 
+            StartCoroutine(GetPokemon(pokeString, true)); 
     }
 
     //Capitalizes first letter in a string
