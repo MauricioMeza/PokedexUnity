@@ -60,6 +60,9 @@ public class Pokemon
             case "fighting":
                 color = new Color((float)0.66, (float)0.65, (float)0.48);
                 break;
+            case "flying":
+                color = new Color((float)0.66, (float)0.56, (float)0.95);
+                break;
             case "poison":
                 color = new Color((float)0.64, (float)0.24, (float)0.63);
                 break;

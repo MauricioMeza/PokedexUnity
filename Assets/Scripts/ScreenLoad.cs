@@ -50,7 +50,7 @@ public class ScreenLoad : MonoBehaviour
     {
         pokemones = new List<Pokemon>();
 
-        //Get all UI elements Text Component
+        //Get all UI elements from component Component
         canvas_right = ui_canRight.GetComponent<Canvas>();
         canvas_right.enabled = false;
         canvas_left = ui_canLeft.GetComponent<Canvas>();
@@ -93,10 +93,115 @@ public class ScreenLoad : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.LeftArrow)){
             pokeLeft();            
         }  
+    } 
+
+    //Loads into the screen the info of a given pokemon
+    private void loadPokeToScreen(int num){
+        Pokemon currentPoke = pokemones[num];
+        
+        //Format Text
+        float w = (float)currentPoke.weight / 10;
+        float h = (float)currentPoke.height / 10;
+        
+        //Set Img andText in name, weight, height
+        img.sprite = currentPoke.sprite;
+        img.enabled = true;
+        text_name.text = CapitalizeFirst(currentPoke.name) + " #" + currentPoke.id;
+        text_height.text = h.ToString() + " m";
+        text_weight.text = w.ToString() + " kg";
+        text_abl1.text = CapitalizeFirst(currentPoke.abilities[0].ability.name);
+        if(currentPoke.abilities.Length == 1)
+            text_abl2.text = "none";
+        else
+            text_abl2.text = currentPoke.abilities[1].ability.name;
+
+        //Set Text and change color depending on types and change postion if onyl 1 type
+        if(currentPoke.types.Length == 1){
+            RectTransform rect;
+            rect = ui_type1.GetComponent<RectTransform>();
+            rect.localPosition = new Vector3(0,3,0);
+            ui_type2.SetActive(false);
+            string type = currentPoke.types[0].type.name;
+            text_type1.text = CapitalizeFirst(type);
+            img_type1.color = Pokemon.GetColorFromType(type);
+        }else{
+            RectTransform rect;
+            rect = ui_type1.GetComponent<RectTransform>();
+            rect.localPosition = new Vector3(-48,3,0);
+            ui_type1.GetComponent<RectTransform>();
+            ui_type2.SetActive(true);
+            string type1 = currentPoke.types[0].type.name;
+            string type2 = currentPoke.types[1].type.name;
+            text_type1.text = CapitalizeFirst(type1);
+            text_type2.text = CapitalizeFirst(type2);
+            img_type1.color = Pokemon.GetColorFromType(type1);
+            img_type2.color = Pokemon.GetColorFromType(type2);
+        }
+
+        //Placeholder for 3D Mesh (it looks cool but im not implementing 889 3d models... for now)
+        switch(currentPoke.id){
+            case 6:
+                mesh_3d.mesh = def_3d[0];
+                break;
+            case 25:
+                mesh_3d.mesh = def_3d[1];
+                break;
+            case 152:
+                mesh_3d.mesh = def_3d[2];
+                break;
+            default:
+                mesh_3d.mesh = def_3d[3];
+                break;
+        }
+
+        //Set Text, change value and change color on stats
+        int i = 0;
+        foreach(Slider sld in slider_stats)
+        {
+            int val = currentPoke.stats[i].base_stat;
+            sld.value = val;
+            sld.gameObject.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = Pokemon.GetColorFromStat(val);
+            sld.gameObject.transform.Find("Handle Slide Area").Find("Handle").Find("Value").GetComponent<Text>().text = val.ToString();
+            i++;
+        }
     }
 
+    //Sends request for pokemon in SearchBar
+    private void searchPokemon()
+    {
+        string pokeString = searchBar.text;
+        if(pokeString.Length != 0)
+            StartCoroutine(GetPokemon(pokeString, true)); 
+    }
 
-    //GET HTTP Request to API for Pokemon
+    //Capitalizes first letter in a string
+    private string CapitalizeFirst(string str){
+        str = char.ToUpper(str[0]) + str.Substring(1);
+        return str;
+    }
+
+    public void pokeRight(){
+        if(currentPoke != (pokemones.Count-1))
+                currentPoke++;
+            else
+                currentPoke = 0;
+            loadPokeToScreen(currentPoke);      
+    }
+    public void pokeLeft(){
+        if(currentPoke != 0)
+                currentPoke--;
+            else
+                currentPoke = pokemones.Count-1;
+            loadPokeToScreen(currentPoke);
+    }
+
+    
+
+    //------------------------------------------------------------------------------------
+    //-------------------------------HTTP REQUESTS----------------------------------------
+    //------------------------------------------------------------------------------------
+
+     //GET HTTP Request to API for Pokemon
     IEnumerator GetPokemon(string pokeId, bool load)
     {
         Pokemon poke;
@@ -162,106 +267,5 @@ public class ScreenLoad : MonoBehaviour
                 canvas_right.enabled = true;
                 canvas_left.enabled = true;
         }
-    } 
-
-    //Loads into the screen the info of a given pokemon
-    private void loadPokeToScreen(int num){
-        Pokemon currentPoke = pokemones[num];
-        
-        //Format Text
-        float w = (float)currentPoke.weight / 10;
-        float h = (float)currentPoke.height / 10;
-        
-
-        //Set Img andText in name, weight, height
-        img.sprite = currentPoke.sprite;
-        img.enabled = true;
-        text_name.text = CapitalizeFirst(currentPoke.name) + " #" + currentPoke.id;
-        text_height.text = h.ToString() + " m";
-        text_weight.text = w.ToString() + " kg";
-        text_abl1.text = CapitalizeFirst(currentPoke.abilities[0].ability.name);
-        if(currentPoke.abilities.Length == 1)
-            text_abl2.text = "none";
-        else
-            text_abl2.text = currentPoke.abilities[1].ability.name;
-
-        //Set Text and change color depending on types and how many types
-        if(currentPoke.types.Length == 1){
-            RectTransform rect;
-            rect = ui_type1.GetComponent<RectTransform>();
-            rect.localPosition = new Vector3(0,3,0);
-            ui_type2.SetActive(false);
-            string type = currentPoke.types[0].type.name;
-            text_type1.text = CapitalizeFirst(type);
-            img_type1.color = Pokemon.GetColorFromType(type);
-        }else{
-            RectTransform rect;
-            rect = ui_type1.GetComponent<RectTransform>();
-            rect.localPosition = new Vector3(-48,3,0);
-            ui_type1.GetComponent<RectTransform>();
-            ui_type2.SetActive(true);
-            string type1 = currentPoke.types[0].type.name;
-            string type2 = currentPoke.types[1].type.name;
-            text_type1.text = CapitalizeFirst(type1);
-            text_type2.text = CapitalizeFirst(type2);
-            img_type1.color = Pokemon.GetColorFromType(type1);
-            img_type2.color = Pokemon.GetColorFromType(type2);
-            
-        }
-
-        switch(currentPoke.id){
-            case 6:
-                mesh_3d.mesh = def_3d[0];
-                break;
-            case 25:
-                mesh_3d.mesh = def_3d[1];
-                break;
-            case 152:
-                mesh_3d.mesh = def_3d[2];
-                break;
-            default:
-                mesh_3d.mesh = def_3d[3];
-                break;
-        }
-
-        //Set Text, change value and change color on stats
-        int i = 0;
-        foreach(Slider sld in slider_stats)
-        {
-            int val = currentPoke.stats[i].base_stat;
-            sld.value = val;
-            sld.gameObject.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = Pokemon.GetColorFromStat(val);
-            sld.gameObject.transform.Find("Handle Slide Area").Find("Handle").Find("Value").GetComponent<Text>().text = val.ToString();
-            i++;
-        }
-    }
-
-    //Sends request for pokemon in SearchBar
-    private void searchPokemon()
-    {
-        string pokeString = searchBar.text;
-        if(pokeString.Length != 0)
-            StartCoroutine(GetPokemon(pokeString, true)); 
-    }
-
-    //Capitalizes first letter in a string
-    private string CapitalizeFirst(string str){
-        str = char.ToUpper(str[0]) + str.Substring(1);
-        return str;
-    }
-
-    public void pokeRight(){
-        if(currentPoke != (pokemones.Count-1))
-                currentPoke++;
-            else
-                currentPoke = 0;
-            loadPokeToScreen(currentPoke);      
-    }
-    public void pokeLeft(){
-        if(currentPoke != 0)
-                currentPoke--;
-            else
-                currentPoke = pokemones.Count-1;
-            loadPokeToScreen(currentPoke);
     }
 }
